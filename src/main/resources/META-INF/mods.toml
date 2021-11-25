@@ -1,0 +1,26 @@
+modLoader="javafml" #mandatory
+loaderVersion="[36,)" #mandatory
+license="MIT"
+[[mods]] #mandatory
+modId="dreblecoins" #mandatory
+version="${file.jarVersion}" #mandatory
+displayName="Dreblecoins" #mandatory
+authors="StrikerRocker" #optional
+# The description text for the mod (multi line!) (#mandatory)
+description='''
+
+'''
+[[dependencies.dreblecoins]] #optional
+   modId="forge" #mandatory
+   mandatory=true #mandatory
+   versionRange="[36,)" #mandatory
+   ordering="NONE"
+   side="BOTH"
+# Here's another dependency
+[[dependencies.dreblecoins]]
+   modId="minecraft"
+   mandatory=true
+   # This version range declares a minimum of the current minecraft version up to but not including the next major version
+   versionRange="[1.16.5,1.17)"
+   ordering="NONE"
+   side="BOTH"
