@@ -10,7 +10,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
@@ -23,7 +25,7 @@ public class Dreblecoins {
     public static Item COIN = new Item(new Item.Properties().tab(ItemGroup.TAB_MISC)).setRegistryName(new ResourceLocation(MODID, "coin"));
 
     public Dreblecoins() {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON,Config.COMMON_SPEC);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -34,26 +36,21 @@ public class Dreblecoins {
         int count, healthMax, countMax, countMin;
         if(event.getSource().getEntity() instanceof PlayerEntity){
             if (living.getMaxHealth() < 50) {
-                countMin = 1;
+                countMin = Config.COMMON.below50MinCount.get();
                 healthMax = 50;
-                countMax = 15;
+                countMax = Config.COMMON.below50MaxCount.get();
             } else if (living.getMaxHealth() < 200) {
                 healthMax = 200;
-                countMin = 10;
-                countMax = 30;
+                countMin = Config.COMMON.below200MinCount.get();
+                countMax = Config.COMMON.below200MaxCount.get();
             } else {
                 healthMax = (int) living.getMaxHealth();
-                countMin = 50;
-                countMax = 64;
+                countMin = Config.COMMON.above200MinCount.get();
+                countMax = Config.COMMON.above200MaxCount.get();
             }
             count = (int) (((living.getMaxHealth() * (countMax - countMin)) / (healthMax)) + countMin);
-            LOGGER.info("Max health : " + living.getMaxHealth());
-            LOGGER.info("Count : " + count);
             living.spawnAtLocation(new ItemStack(COIN, count));
         }
-    }
-
-    private void setup(final FMLCommonSetupEvent event) {
     }
 
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
